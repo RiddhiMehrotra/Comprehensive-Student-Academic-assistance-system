@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+    <div class="dashboard-page">
+
+        <aside class="sidebar">
+            <div>
+                <div class="brand">
+                    <div class="brand-icon">{{ user_initial }}</div>
+                    <div>
+                        <h2>Faculty Portal</h2>
+                        <p>Academic Assistance</p>
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <a href="{{ url_for('faculty_dashboard') }}" class="nav-link active"> Dashboard</a>
+                    <a href="#" class="nav-link"> Courses</a>
+                    <a href="#" class="nav-link"> Student Records</a>
+                    <a href="#" class="nav-link"> Materials</a>
+                    <a href="#" class="nav-link"> Profile</a>
+                </nav>
+            </div>
+
+            <div class="sidebar-bottom">
+                <a href="{{ url_for('logout') }}" class="logout-btn">↪ Logout</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <p class="welcome-text">Welcome back,</p>
+                    <h1>{{ user["full_name"] }}</h1>
+                    <p class="sub-text">Manage courses, materials, and student academic records.</p>
+                </div>
+
+                <div class="profile-badge">
+                    {{ user_initial }}
+                </div>
+            </header>
+
+            <section class="summary-grid">
+                <div class="summary-card">
+                    <span class="card-label">Role</span>
+                    <h3>Faculty</h3>
+                    
+                </div>
+
+                <div class="summary-card">
+                    <span class="card-label">Department</span>
+                    <h3>{{ faculty["department"] if faculty else "N/A" }}</h3>
+                    
+                </div>
+
+                <div class="summary-card">
+                    <span class="card-label">Designation</span>
+                    <h3>{{ faculty["designation"] if faculty else "N/A" }}</h3>
+                    
+                </div>
+
+                <div class="summary-card">
+                    <span class="card-label">Email</span>
+                    <h3 class="email-text">{{ user["email"] }}</h3>
+                    
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Faculty Profile</h2>
+                </div>
+
+                <div class="profile-grid">
+                    <div class="profile-item">
+                        <span>Full Name</span>
+                        <strong>{{ user["full_name"] }}</strong>
+                    </div>
+
+
+
+
+                    <div class="profile-item">
+                        <span>Designation</span>
+                        <strong>{{ faculty["designation"] if faculty else "N/A" }}</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Faculty Actions</h2>
+                </div>
+
+                <div class="card-grid">
+                    <div class="mini-card">
+                        <h3>Manage Courses</h3>
+                        <p>View and organize assigned courses and teaching responsibilities.</p>
+                    </div>
+
+                    <div class="mini-card">
+                        <h3>Upload Materials</h3>
+                        <p>Provide lecture notes, PDFs, and learning resources for students.</p>
+                    </div>
+
+                    <div class="mini-card">
+                        <h3>Student Progress</h3>
+                        <p>Track academic records, grades, and performance insights.</p>
+                    </div>
+
+                    <div class="mini-card">
+                        <h3>Announcements</h3>
+                        <p>Share updates, notices, and class-related information.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
