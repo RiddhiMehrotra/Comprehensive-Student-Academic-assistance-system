@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-page">
+
+        <aside class="sidebar">
+            <div>
+                <div class="brand">
+                    <div class="brand-icon">{{ user_initial }}</div>
+                    <div>
+                        <h2>Admin Portal</h2>
+                        <p>Academic Assistance</p>
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <a href="{{ url_for('admin_dashboard') }}" class="nav-link active"> Dashboard</a>
+                    <a href="#" class="nav-link"> User Management</a>
+                    <a href="#" class="nav-link"> Academic Records</a>
+                    <a href="#" class="nav-link"> System Settings</a>
+                    <a href="#" class="nav-link"> Profile</a>
+                </nav>
+            </div>
+
+            <div class="sidebar-bottom">
+                <a href="{{ url_for('logout') }}" class="logout-btn">↪ Logout</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <p class="welcome-text">Welcome back,</p>
+                    <h1>{{ user["full_name"] }}</h1>
+                    <p class="sub-text">Manage system users, academic records, and administration features.</p>
+                </div>
+
+                <div class="profile-badge">
+                    {{ user_initial }}
+                </div>
+            </header>
+
+            <section class="summary-grid">
+                <div class="summary-card">
+                    <span class="card-label">Role</span>
+                    <h3>Admin</h3>
+                    <p>System-level access and administrative controls</p>
+                </div>
+
+                <div class="summary-card">
+                    <span class="card-label">Department</span>
+                    <h3>{{ admin["department"] if admin else "N/A" }}</h3>
+                    <p>Assigned admin department</p>
+                </div>
+
+                <div class="summary-card">
+                    <span class="card-label">Designation</span>
+                    <h3>{{ admin["designation"] if admin else "N/A" }}</h3>
+                    <p>Current admin designation</p>
+                </div>
+
+                <div class="summary-card">
+                    <span class="card-label">Email</span>
+                    <h3>{{ user["email"] }}</h3>
+                    <p>Official admin login email</p>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Admin Profile</h2>
+                </div>
+
+                <div class="profile-grid">
+                    <div class="profile-item">
+                        <span>Full Name</span>
+                        <strong>{{ user["full_name"] }}</strong>
+                    </div>
+
+                    <div class="profile-item">
+                        <span>Email</span>
+                        <strong>{{ user["email"] }}</strong>
+                    </div>
+
+                    <div class="profile-item">
+                        <span>Department</span>
+                        <strong>{{ admin["department"] if admin else "N/A" }}</strong>
+                    </div>
+
+                    <div class="profile-item">
+                        <span>Designation</span>
+                        <strong>{{ admin["designation"] if admin else "N/A" }}</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Admin Controls</h2>
+                </div>
+
+                <div class="card-grid">
+                    <div class="mini-card">
+                        <h3>User Management</h3>
+                        <p>Create, update, and monitor student, faculty, and admin user accounts.</p>
+                    </div>
+
+                    <div class="mini-card">
+                        <h3>Academic Data</h3>
+                        <p>Manage timetable data, records, and academic information across the system.</p>
+                    </div>
+
+                    <div class="mini-card">
+                        <h3>System Settings</h3>
+                        <p>Control platform-level configuration and administrative operations.</p>
+                    </div>
+
+                    <div class="mini-card">
+                        <h3>Reports</h3>
+                        <p>View institutional summaries and administrative reports.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

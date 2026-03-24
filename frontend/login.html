@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Assistance Portal</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../static/css/login.css">
+</head>
+<body>
+    <div class="bg-scene">
+
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+
+        <div class="curve curve1"></div>
+        <div class="curve curve2"></div>
+
+        <div class="login-shell">
+            <div class="login-frame">
+                <div class="login-screen">
+
+                    <div class="screen-content">
+                        <p class="eyebrow">WELCOME TO</p>
+                        <h1>Student Assistance Portal</h1>
+                        <p class="subtitle">Empowering students with seamless academic support</p>
+
+                        <div class="cap">🎓</div>
+
+                        <div class="login-box">
+                            <form method="POST">
+                                <div class="input-box">
+                                    <span class="icon">✉</span>
+                                    <input type="email" name="email" placeholder="Official College Email" required>
+                                </div>
+
+                                <div class="input-box">
+                                    <span class="icon">🔒</span>
+                                    <input type="password" name="password" placeholder="Password" required>
+                                </div>
+                                <div class="forgot-row">
+                                    <a href="{{ url_for('forgot_password') }}">Forgot Password?</a>
+                                </div>
+
+                                <div class="input-box select-box">
+                                    <select name="role" required>
+                                        <option value="" disabled selected>Select Role</option>
+                                        <option value="Student">Student</option>
+                                        <option value="Faculty">Faculty</option>
+                                        <option value="Admin">Admin</option>
+                                    </select>
+                                    <span class="select-arrow">⌄</span>
+                                </div>
+
+                                <button type="submit">Login</button>
+                            </form>
+
+                            <p class="info">
+                                Use your official college email to access your personalized portal
+                            </p>
+
+                            {% if error %}
+                                <p class="error">{{ error }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

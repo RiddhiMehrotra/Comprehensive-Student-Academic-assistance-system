@@ -1,0 +1,311 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SRM KTR GPA Calculator</title>
+    <link rel="stylesheet" href="../static/css/gpa.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+    <div class="dashboard-bg"></div>
+    <div class="dashboard-overlay"></div>
+
+    <div class="dashboard-layout" id="dashboardLayout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-top">
+                <div class="brand-wrap">
+                    <div class="brand-text">
+                        <h2>Student Portal</h2>
+                        <p>Academic Assistance</p>
+                    </div>
+                </div>
+
+                <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle sidebar">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('student_dashboard') }}" class="nav-item" data-label="Dashboard">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="{{ url_for('gpa_calculator_page') }}" class="nav-item active" data-label="GPA Calculator">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span>GPA Calculator</span>
+                </a>
+
+                <a href="{{ url_for('materials_page') }}" class="nav-item" data-label="Study Materials">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Study Materials</span>
+                </a>
+
+                <a href="{{ url_for('electives_page') }}" class="nav-item" data-label="Electives">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>Electives</span>
+                </a>
+
+                <a href="{{ url_for('academic_progress_page') }}" class="nav-item" data-label="Academic Progress">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Academic Progress</span>
+                </a>
+
+                <a href="{{ url_for('profile_page') }}" class="nav-item" data-label="Profile">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="{{ url_for('logout') }}" class="logout-btn" data-label="Logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <main class="main-content">
+
+            <!-- Hero -->
+            <section class="hero-card">
+                <div class="hero-text">
+                    <p class="hero-subtitle">Welcome back,</p>
+                    <h1>{{ user.full_name }}</h1>
+                    <p class="hero-desc">Calculate your GPA with SRM KTR grading system.</p>
+
+                    <div class="hero-badges">
+                        <div class="hero-badge">
+                            <i class="fa-solid fa-calculator"></i>
+                            <span>GPA Calculator</span>
+                        </div>
+                        <div class="hero-badge">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                            <span>Semester {{ student_profile.semester }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-avatar">
+                    {{ user_initial }}
+                </div>
+            </section>
+
+            <!-- GPA Calculator Content -->
+            <div class="gpacard">
+                <div class="gpa-header">
+                    <h1>SRM KTR GPA Calculator</h1>
+                    <p>SGPA uses credits x grade points. CGPA is the weighted average over semesters.</p>
+                </div>
+                <div class="gpa-content">
+                <div class="input-block">
+                    <h2>SGPA Calculator</h2>
+
+                    <div class="info">
+                        Grade Points: O=10, A+=9, A=8, B+=7, B=6, C=5, F=0.
+                        <br />
+                        SRM KTR SGPA = sum(credit x grade points) / total credits
+                    </div>
+
+                    <div id="course-list">
+                        <div class="course-row">
+                            <input type="text" class="course-subject" placeholder="Subject name" value="Sample Subject" />
+                            <input type="number" class="course-credit" placeholder="Credits" min="1" max="4" step="1" value="3" />
+                            <select class="course-grade">
+                                <option value="O">O</option>
+                                <option value="A+" selected>A+</option>
+                                <option value="A">A</option>
+                                <option value="B+">B+</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="F">F</option>
+                            </select>
+                            <button type="button" class="btn btn-secondary" onclick="removeItem(this)" title="Remove course">✕</button>
+                        </div>
+                    </div>
+
+                    <div class="btn-row">
+                        <button type="button" class="btn btn-secondary" onclick="addCourseRow()">Add Course</button>
+                        <button type="button" class="btn btn-primary" onclick="calculateSGPA()">Calculate SGPA</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetSGPA()">Reset</button>
+                    </div>
+
+                    <div class="results">
+                        <h2>SGPA Result</h2>
+                        <p id="sgpa-result">0.00</p>
+                        <p id="sgpa-credits">Total Credits: 0</p>
+                    </div>
+
+                    <div class="table-legend">
+                        <div class="legend-item"><strong>Subject</strong><span>Enter subject name</span></div>
+                        <div class="legend-item"><strong>Credits</strong><span>1-4</span></div>
+                        <div class="legend-item"><strong>Grade</strong><span>O, A+, A, B+</span></div>
+                        <div class="legend-item"><strong>Remove</strong><span>Delete row</span></div>
+                    </div>
+                </div>
+
+                <div class="input-block">
+                    <h2>CGPA Calculator</h2>
+
+                    <div class="info">
+                        CGPA = sum(SGPA * semester credits) / sum(semester credits).
+                    </div>
+
+                    <div id="semester-list">
+                        <div class="semester-row">
+                            <input type="number" class="semester-sgpa" placeholder="SGPA" min="0" max="10" step="0.01" value="8.0" />
+                            <input type="number" class="semester-credits" placeholder="Credits" min="1" max="40" step="1" value="20" />
+                            <div></div>
+                            <button type="button" class="btn btn-secondary" onclick="removeItem(this)" title="Remove semester">✕</button>
+                        </div>
+                    </div>
+
+                    <div class="btn-row">
+                        <button type="button" class="btn btn-secondary" onclick="addSemesterRow()">Add Semester</button>
+                        <button type="button" class="btn btn-primary" onclick="calculateCGPA()">Calculate CGPA</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetCGPA()">Reset</button>
+                    </div>
+
+                    <div class="results">
+                        <h2>CGPA Result</h2>
+                        <p id="cgpa-result">0.00</p>
+                        <p id="cgpa-credits">Total Semester Credits: 0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+    <script>
+        const menuToggle = document.getElementById("menuToggle");
+        const dashboardLayout = document.getElementById("dashboardLayout");
+
+        menuToggle.addEventListener("click", () => {
+            dashboardLayout.classList.toggle("collapsed");
+        });
+    </script>
+
+    <script>
+        const gradePoints = { 'O': 10, 'A+': 9, 'A': 8, 'B+': 7, 'B': 6, 'C': 5, 'F': 0 };
+
+        function createCourseRow() {
+            const row = document.createElement('div');
+            row.className = 'course-row';
+            row.innerHTML = `
+                <input type='text' class='course-subject' placeholder='Subject name' value='' />
+                <input type='number' class='course-credit' placeholder='Credits' min='1' max='4' step='1' value='3' />
+                <select class='course-grade'>
+                    <option value='O'>O</option>
+                    <option value='A+' selected>A+</option>
+                    <option value='A'>A</option>
+                    <option value='B+'>B+</option>
+                    <option value='B'>B</option>
+                    <option value='C'>C</option>
+                    <option value='F'>F</option>
+                </select>
+                <button type='button' class='btn btn-secondary' onclick='removeItem(this)' title='Remove course'>✕</button>
+            `;
+            return row;
+        }
+
+        function addCourseRow() {
+            const list = document.getElementById('course-list');
+            list.appendChild(createCourseRow());
+        }
+
+        function removeItem(el) {
+            const parent = el.closest('.course-row, .semester-row');
+            parent?.remove();
+        }
+
+        function calculateSGPA() {
+            alert('Calculating SGPA...');
+            console.log('Calculating SGPA...');
+            const rows = document.querySelectorAll('.course-row');
+            console.log('Found rows:', rows.length);
+            let totalCredits = 0;
+            let totalPoints = 0;
+
+            rows.forEach((row, index) => {
+                const credit = Number(row.querySelector('.course-credit').value || 0);
+                const grade = row.querySelector('.course-grade').value;
+                console.log(`Row ${index}: credit=${credit}, grade=${grade}`);
+                if (credit > 0 && gradePoints.hasOwnProperty(grade)) {
+                    totalCredits += credit;
+                    totalPoints += credit * gradePoints[grade];
+                    console.log(`Added: ${credit} * ${gradePoints[grade]} = ${credit * gradePoints[grade]}`);
+                }
+            });
+
+            const sgpa = totalCredits === 0 ? 0 : totalPoints / totalCredits;
+            console.log(`Total points: ${totalPoints}, Total credits: ${totalCredits}, SGPA: ${sgpa}`);
+            document.getElementById('sgpa-result').textContent = sgpa.toFixed(2);
+            document.getElementById('sgpa-credits').textContent = `Total Credits: ${totalCredits}`;
+            // alert('SGPA Calculated: ' + sgpa.toFixed(2));
+        }
+
+        function resetSGPA() {
+            document.getElementById('course-list').innerHTML = '';
+            document.getElementById('sgpa-result').textContent = '0.00';
+            document.getElementById('sgpa-credits').textContent = 'Total Credits: 0';
+            addCourseRow();
+        }
+
+        function createSemesterRow() {
+            const row = document.createElement('div');
+            row.className = 'semester-row';
+            row.innerHTML = `
+                <input type='number' class='semester-sgpa' placeholder='SGPA' min='0' max='10' step='0.01' value='8.0' />
+                <input type='number' class='semester-credits' placeholder='Credits' min='1' max='40' step='1' value='20' />
+                <div></div>
+                <button type='button' class='btn btn-secondary' onclick='removeItem(this)' title='Remove semester'>✕</button>
+            `;
+            return row;
+        }
+
+        function addSemesterRow() {
+            const list = document.getElementById('semester-list');
+            list.appendChild(createSemesterRow());
+        }
+
+        function calculateCGPA() {
+            const rows = document.querySelectorAll('.semester-row');
+            let totalCredits = 0;
+            let totalWeighted = 0;
+
+            rows.forEach(row => {
+                const sgpa = Number(row.querySelector('.semester-sgpa').value || 0);
+                const credits = Number(row.querySelector('.semester-credits').value || 0);
+                if (credits > 0) {
+                    totalCredits += credits;
+                    totalWeighted += sgpa * credits;
+                }
+            });
+
+            const cgpa = totalCredits === 0 ? 0 : totalWeighted / totalCredits;
+            document.getElementById('cgpa-result').textContent = cgpa.toFixed(2);
+            document.getElementById('cgpa-credits').textContent = `Total Semester Credits: ${totalCredits}`;
+            // alert('CGPA Calculated: ' + cgpa.toFixed(2));
+        }
+
+        function resetCGPA() {
+            document.getElementById('semester-list').innerHTML = '';
+            document.getElementById('cgpa-result').textContent = '0.00';
+            document.getElementById('cgpa-credits').textContent = 'Total Semester Credits: 0';
+            addSemesterRow();
+        }
+
+        // Initialize rows
+        addCourseRow();
+        addSemesterRow();
+    </script>
+</body>
+</html>

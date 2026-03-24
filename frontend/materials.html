@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Materials - Student Portal</title>
+    <link rel="stylesheet" href="../static/css/materials.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="materials-bg"></div>
+    <div class="materials-overlay"></div>
+
+    <div class="materials-layout" id="dashboardLayout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-top">
+                <div class="brand-wrap">
+                    <div class="brand-text">
+                        <h2>Student Portal</h2>
+                        <p>Academic Assistance</p>
+                    </div>
+                </div>
+
+                <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle sidebar">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('student_dashboard') }}" class="nav-item" data-label="Dashboard">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="{{ url_for('gpa_calculator_page') }}" class="nav-item" data-label="GPA Calculator">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span>GPA Calculator</span>
+                </a>
+
+                <a href="{{ url_for('materials_page') }}" class="nav-item active" data-label="Study Materials">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Study Materials</span>
+                </a>
+
+                <a href="{{ url_for('electives_page') }}" class="nav-item" data-label="Electives">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>Electives</span>
+                </a>
+
+                <a href="{{ url_for('academic_progress_page') }}" class="nav-item" data-label="Academic Progress">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Academic Progress</span>
+                </a>
+
+                <a href="{{ url_for('profile_page') }}" class="nav-item" data-label="Profile">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="{{ url_for('logout') }}" class="logout-btn" data-label="Logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <main class="main-content">
+
+            <!-- Hero -->
+            <section class="hero-card">
+                <div class="hero-text">
+                    <p class="hero-subtitle">Access Your</p>
+                    <h1>Study Materials</h1>
+                    <p class="hero-desc">Download lecture notes, assignments, and study resources organized by subject.</p>
+
+                    <div class="hero-badges">
+                        <div class="hero-badge">
+                            <i class="fa-solid fa-book"></i>
+                            <span>Semester {{ student_profile.semester }}</span>
+                        </div>
+                        <div class="hero-badge">
+                            <i class="fa-solid fa-file-alt"></i>
+                            <span>{{ materials|length }} Materials</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-avatar">
+                    {{ user_initial }}
+                </div>
+            </section>
+
+            <!-- Materials Container -->
+            <div class="materials-container">
+                {% if materials %}
+                    {% set subjects = materials|groupby('subject') %}
+                    {% for subject, subject_materials in subjects %}
+                    <section class="subject-section">
+                        <div class="subject-header">
+                            <div class="subject-title">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                                <div>
+                                    <h2>{{ subject }}</h2>
+                                    <p>{{ subject_materials|length }} material{{ 's' if subject_materials|length > 1 else '' }} available</p>
+                                </div>
+                            </div>
+                            <div class="subject-stats">
+                                <div class="stat-badge">
+                                    <i class="fa-solid fa-file"></i>
+                                    {{ subject_materials|length }}
+                                </div>
+                                <div class="stat-badge">
+                                    <i class="fa-solid fa-code"></i>
+                                    {{ subject_materials[0].course_code }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="materials-grid">
+                            {% for material in subject_materials %}
+                            <div class="material-card">
+                                <div class="material-header">
+                                    <div class="material-title">
+                                        <h3>{{ material.material_title }}</h3>
+                                        <div class="material-meta">
+                                            <span>
+                                                <i class="fa-solid fa-calendar"></i>
+                                                Semester {{ material.semester }}
+                                            </span>
+                                            <span>
+                                                <i class="fa-solid fa-tag"></i>
+                                                {{ material.course_code }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="material-type">
+                                        {{ material.file_type }}
+                                    </div>
+                                </div>
+
+                                <div class="material-content">
+                                    <p class="material-description">
+                                        Study material for {{ material.subject }} covering essential concepts and practical applications.
+                                    </p>
+
+                                    <div class="material-details">
+                                        <div class="detail-row">
+                                            <i class="fa-solid fa-user-tie"></i>
+                                            <span>Uploaded by faculty</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <i class="fa-solid fa-clock"></i>
+                                            <span>Available for download</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="material-actions">
+                                    <a href="{{ material.file_link }}" class="material-btn primary" target="_blank">
+                                        <i class="fa-solid fa-eye"></i>
+                                        View Material
+                                    </a>
+                                    <a href="{{ material.file_link }}" class="material-btn secondary" download>
+                                        <i class="fa-solid fa-download"></i>
+                                        Download
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </section>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fa-regular fa-folder-open"></i>
+                        <h3>No Study Materials Available</h3>
+                        <p>Materials for your semester will be uploaded by faculty soon.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Sidebar toggle functionality
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const dashboardLayout = document.getElementById('dashboardLayout');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            dashboardLayout.classList.toggle('sidebar-active');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && !sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                sidebar.classList.remove('active');
+                dashboardLayout.classList.remove('sidebar-active');
+            }
+        });
+    </script>
+</body>
+</html>

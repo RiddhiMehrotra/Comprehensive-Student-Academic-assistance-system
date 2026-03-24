@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="../static/css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-bg"></div>
+    <div class="dashboard-overlay"></div>
+
+    <div class="dashboard-layout" id="dashboardLayout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-top">
+                <div class="brand-wrap">
+                    <div class="brand-text">
+                        <h2>Student Portal</h2>
+                        <p>Academic Assistance</p>
+                    </div>
+                </div>
+
+                <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle sidebar">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('student_dashboard') }}" class="nav-item active" data-label="Dashboard">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="{{ url_for('gpa_calculator_page') }}" class="nav-item" data-label="GPA Calculator">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span>GPA Calculator</span>
+                </a>
+
+                <a href="{{ url_for('materials_page') }}" class="nav-item" data-label="Study Materials">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Study Materials</span>
+                </a>
+
+                <a href="{{ url_for('electives_page') }}" class="nav-item" data-label="Electives">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>Electives</span>
+                </a>
+
+                <a href="{{ url_for('academic_progress_page') }}" class="nav-item" data-label="Academic Progress">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Academic Progress</span>
+                </a>
+
+                <a href="{{ url_for('profile_page') }}" class="nav-item" data-label="Profile">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="{{ url_for('logout') }}" class="logout-btn" data-label="Logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <main class="main-content">
+
+            <!-- Hero -->
+            <section class="hero-card">
+                <div class="hero-text">
+                    <p class="hero-subtitle">Welcome back,</p>
+                    <h1>{{ user.full_name }}</h1>
+                    <p class="hero-desc">Track your academic information from one place.</p>
+
+                    <div class="hero-badges">
+                        <div class="hero-badge">
+                            <i class="fa-solid fa-calendar-days"></i>
+                            <span>Day Order {{ today_day_order }}</span>
+                        </div>
+                        <div class="hero-badge">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                            <span>Semester {{ student_profile.semester }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-avatar">
+                    {{ user_initial }}
+                </div>
+            </section>
+
+            <!-- Summary Cards -->
+            <section class="summary-grid">
+                <div class="summary-card">
+                    <div class="summary-top">
+                        <span>Current GPA</span>
+                        <i class="fa-solid fa-chart-simple"></i>
+                    </div>
+                    <h3>{{ current_gpa }}</h3>
+                    <p>Calculated from available grade records</p>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-top">
+                        <span>Semester</span>
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <h3>{{ student_profile.semester }}</h3>
+                    <p>Current semester details</p>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-top">
+                        <span>Department</span>
+                        <i class="fa-solid fa-building-columns"></i>
+                    </div>
+                    <h3>{{ student_profile.department }}</h3>
+                    <p>{{ student_profile.program }}</p>
+                </div>
+
+                <div class="summary-card accent-gold">
+                    <div class="summary-top">
+                        <span>Credits Earned</span>
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <h3>{{ student_profile.credits_earned }}</h3>
+                    <p>Total completed academic credits</p>
+                </div>
+            </section>
+
+            <!-- Dashboard Grid -->
+            <section class="dashboard-grid">
+
+                <!-- Timetable -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <div>
+                            <h2>Today’s Timetable</h2>
+                            <p>Your scheduled classes for the selected day order</p>
+                        </div>
+
+                        <form method="GET" action="{{ url_for('student_dashboard') }}" class="dayorder-form">
+                            <select name="dayorder" onchange="this.form.submit()">
+                                <option value="1" {% if selected_dayorder == '1' %}selected{% endif %}>Day Order 1</option>
+                                <option value="2" {% if selected_dayorder == '2' %}selected{% endif %}>Day Order 2</option>
+                                <option value="3" {% if selected_dayorder == '3' %}selected{% endif %}>Day Order 3</option>
+                                <option value="4" {% if selected_dayorder == '4' %}selected{% endif %}>Day Order 4</option>
+                                <option value="5" {% if selected_dayorder == '5' %}selected{% endif %}>Day Order 5</option>
+                                <option value="all" {% if selected_dayorder == 'all' %}selected{% endif %}>All</option>
+                            </select>
+                        </form>
+                    </div>
+
+                    <div class="timetable-list">
+                        {% if timetable %}
+                            {% for row in timetable %}
+                            <div class="timetable-item">
+                                <div class="time-pill">{{ row.start_time }} - {{ row.end_time }}</div>
+
+                                <div class="tt-info">
+                                    <h4>
+                                        {% if row.subject is defined and row.subject %}
+                                            {{ row.subject }}
+                                        {% elif row.subject_name is defined and row.subject_name %}
+                                            {{ row.subject_name }}
+                                        {% elif row.course_name is defined and row.course_name %}
+                                            {{ row.course_name }}
+                                        {% else %}
+                                            Subject Not Available
+                                        {% endif %}
+                                    </h4>
+
+                                    <p>
+                                        {% if row.faculty is defined and row.faculty %}
+                                            {{ row.faculty }}
+                                        {% elif row.faculty_name is defined and row.faculty_name %}
+                                            {{ row.faculty_name }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                        {% if row.room_no is defined and row.room_no %} • {{ row.room_no }}{% endif %}
+                                    </p>
+                                </div>
+
+                                <div class="day-pill">DO {{ row.day_order }}</div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="empty-state">
+                                <i class="fa-regular fa-calendar-xmark"></i>
+                                <p>No classes available for this day order.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <div>
+                            <h2>Quick Actions</h2>
+                            <p>Access key academic tools</p>
+                        </div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <a href="{{ url_for('materials_page') }}" class="action-tile">
+                            <i class="fa-solid fa-book-open"></i>
+                            <span>Materials</span>
+                        </a>
+
+                        <a href="{{ url_for('gpa_calculator_page') }}" class="action-tile">
+                            <i class="fa-solid fa-calculator"></i>
+                            <span>GPA Tool</span>
+                        </a>
+
+                        <a href="{{ url_for('electives_page') }}" class="action-tile">
+                            <i class="fa-solid fa-layer-group"></i>
+                            <span>Electives</span>
+                        </a>
+
+                        <a href="{{ url_for('academic_progress_page') }}" class="action-tile">
+                            <i class="fa-solid fa-chart-line"></i>
+                            <span>Progress</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Enrolled Subjects -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <div>
+                            <h2>Enrolled Subjects</h2>
+                            <p>Your current registered courses</p>
+                        </div>
+                    </div>
+
+                    <div class="subject-list">
+                        {% for subject in enrolled_subjects %}
+                        <div class="subject-item">
+                            <div>
+                                <h4>{{ subject.subject }}</h4>
+                                <p>{{ subject.course_code }}</p>
+                            </div>
+                            <div class="subject-meta">
+                                <span>{{ subject.credits }} Credits</span>
+                                <strong>{{ subject.grade }}</strong>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Profile Preview -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <div>
+                            <h2>Profile Preview</h2>
+                            <p>Basic student details</p>
+                        </div>
+                    </div>
+
+                    <div class="mini-profile">
+                        <div class="mini-profile-row">
+                            <span>Register No</span>
+                            <strong>{{ student_profile.register_number }}</strong>
+                        </div>
+                        <div class="mini-profile-row">
+                            <span>Email</span>
+                            <strong>{{ user.email }}</strong>
+                        </div>
+                        <div class="mini-profile-row">
+                            <span>Department</span>
+                            <strong>{{ student_profile.department }}</strong>
+                        </div>
+                        <div class="mini-profile-row">
+                            <span>Section</span>
+                            <strong>{{ student_profile.section }}</strong>
+                        </div>
+                    </div>
+
+                    <a href="{{ url_for('profile_page') }}" class="view-profile-btn">
+                        View Full Profile
+                    </a>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const menuToggle = document.getElementById("menuToggle");
+        const dashboardLayout = document.getElementById("dashboardLayout");
+
+        menuToggle.addEventListener("click", () => {
+            dashboardLayout.classList.toggle("collapsed");
+        });
+    </script>
+</body>
+</html>
