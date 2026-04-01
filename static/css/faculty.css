@@ -1,0 +1,473 @@
+/* CONTAINER */
+.faculty-container {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+/* STATS */
+.faculty-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.faculty-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.faculty-card h3 {
+    font-size: 15px;
+    color: var(--text-soft);
+    margin-bottom: 6px;
+}
+
+.faculty-card p {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-dark);
+}
+
+/* GENERAL PANEL */
+.panel {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+}
+
+/* COMBINED CARD */
+.combined-card {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 28px;
+    background: #ffffff;
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    border-top: 4px solid #3b82f6;
+}
+
+/* SECTION HEADINGS */
+.profile-section h2,
+.subjects-section h2 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1e3a5f;
+    margin-bottom: 16px;
+}
+
+/* PROFILE */
+.profile-section {
+    border-right: 1px solid #e2e8f0;
+    padding-right: 20px;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.profile-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f1f5f9;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    gap: 14px;
+}
+
+.profile-label {
+    color: #64748b;
+    font-weight: 600;
+}
+
+.profile-value {
+    color: #1e293b;
+    font-weight: 700;
+    text-align: right;
+}
+
+/* SUBJECTS */
+.subjects-section {
+    padding-left: 10px;
+}
+
+.subjects-section h2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    background: #e3f0ff;
+    color: #2563eb;
+    font-size: 14px;
+    font-weight: 800;
+    padding: 0 10px;
+}
+
+.subjects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.subject-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f4f8fc;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid #e2eaf3;
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+
+.subject-item:hover {
+    background: #e3f0ff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 102, 255, 0.12);
+}
+
+.subject-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.subject-icon {
+    font-size: 20px;
+}
+
+.subject-info {
+    flex: 1;
+}
+
+.subject-info h3,
+.subject-left h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e3a5f;
+    line-height: 1.25;
+}
+
+.subject-info p,
+.subject-left p {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.subject-arrow {
+    font-size: 18px;
+    color: #3b82f6;
+    transition: transform 0.2s ease;
+}
+
+.subject-item:hover .subject-arrow {
+    transform: translateX(4px);
+}
+
+/* TIMETABLE PANEL */
+.timetable-panel {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 22px;
+    padding: 22px;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.524);
+}
+
+.timetable-panel-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.timetable-panel h2 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #183b63;
+    margin: 0;
+}
+
+.timetable-subtext {
+    margin: 6px 0 0;
+    font-size: 14px;
+    color: #6c819a;
+    font-weight: 500;
+}
+
+/* WEEKLY DAY-WISE BOARD */
+.faculty-weekly-board {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 18px;
+    align-items: start;
+}
+
+.faculty-day-card {
+    background: #f8fbff;
+    border: 1px solid #dce8f5;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
+}
+
+.faculty-day-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 28px rgba(30, 58, 95, 0.12);
+}
+
+.faculty-day-card.active-day {
+    border: 2px solid #3b82f6;
+    background: linear-gradient(180deg, #f0f7ff, #ffffff);
+    box-shadow: 0 14px 28px rgba(59, 130, 246, 0.14);
+}
+
+.faculty-day-card:nth-child(1) {
+    border-top: 3px solid #afcdff;
+}
+
+.faculty-day-card:nth-child(2) {
+    border-top: 3px solid #afcdff;
+}
+
+.faculty-day-card:nth-child(3) {
+    border-top: 3px solid #afcdff;
+}
+
+.faculty-day-card:nth-child(4) {
+    border-top: 3px solid #afcdff;
+}
+
+.faculty-day-card:nth-child(5) {
+    border-top: 3px solid #afcdff;
+}
+
+.faculty-day-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 16px 14px;
+    background: linear-gradient(135deg, #eaf3ff, #dcecff);
+    border-bottom: 1px solid #d5e3f2;
+}
+
+.faculty-day-heading h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: #1e3a5f;
+}
+
+.faculty-day-heading p {
+    margin: 4px 0 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7f98;
+}
+
+.faculty-day-badge {
+    background: #3b82f6;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.faculty-day-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+}
+
+/* IMPORTANT: only day 3 empty card should center vertically */
+.faculty-day-card:has(.faculty-empty-day) .faculty-day-card-body {
+    justify-content: center;
+    min-height: 360px;
+}
+
+.faculty-class-item {
+    display: grid;
+    grid-template-columns: 74px 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
+    background: #ffffff;
+    border: 1px solid #e2eaf3;
+    border-radius: 14px;
+    transition: all 0.2s ease;
+}
+
+.faculty-class-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(59, 130, 246, 0.10);
+    border-color: #cfe0f5;
+}
+
+.faculty-class-time {
+    background: #eef5fc;
+    border-radius: 10px;
+    padding: 7px 5px;
+    text-align: center;
+}
+
+.faculty-class-time span {
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    color: #183b63;
+    line-height: 1.2;
+}
+
+.faculty-class-time small {
+    display: block;
+    margin-top: 2px;
+    font-size: 9px;
+    font-weight: 600;
+    color: #6f86a0;
+}
+
+.faculty-class-details {
+    min-width: 0;
+}
+
+.faculty-class-details h4 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.22;
+    color: #17365d;
+    word-break: break-word;
+}
+
+.faculty-class-details p {
+    margin: 4px 0 0;
+    font-size: 11px;
+    font-weight: 700;
+    color: #4a6a8e;
+}
+
+.faculty-class-room {
+    display: none;
+}
+
+.faculty-empty-day {
+    border: 1px dashed #d6e2ef;
+    background: #fbfdff;
+    color: #7b8ea5;
+    border-radius: 16px;
+    padding: 24px 12px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 140px;
+}
+
+.faculty-empty-day i {
+    font-size: 18px;
+    color: #9bb0c7;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1400px) {
+    .faculty-weekly-board {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1100px) {
+    .combined-card {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .profile-section {
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+        padding-right: 0;
+        padding-bottom: 18px;
+    }
+
+    .subjects-section {
+        padding-left: 0;
+    }
+}
+
+@media (max-width: 900px) {
+    .faculty-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .faculty-weekly-board {
+        grid-template-columns: 1fr;
+    }
+
+    .faculty-day-card:has(.faculty-empty-day) .faculty-day-card-body {
+        min-height: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .faculty-card {
+        padding: 16px;
+    }
+
+    .faculty-card p {
+        font-size: 21px;
+    }
+
+    .combined-card,
+    .timetable-panel {
+        padding: 16px;
+    }
+
+    .profile-row,
+    .subject-item {
+        padding: 12px;
+    }
+
+    .faculty-day-card-header {
+        padding: 14px;
+    }
+
+    .faculty-day-card-body {
+        padding: 12px;
+    }
+
+    .faculty-class-item {
+        padding: 10px;
+    }
+}

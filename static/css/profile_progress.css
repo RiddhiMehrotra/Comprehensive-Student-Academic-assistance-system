@@ -1,0 +1,230 @@
+/* ===== TABLE (Academic Progress only) ===== */
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    background: #fff;
+    border: 1px solid #d8e3f1;
+    border-radius: 20px;
+}
+
+.table-wrap table {
+    width: 100%;
+    min-width: 820px;
+    border-collapse: collapse;
+}
+
+.table-wrap thead {
+    background: #eef4fb;
+}
+
+.table-wrap th {
+    padding: 18px 20px;
+    font-size: 17px;
+    font-weight: 800;
+    color: #1f3f68;
+    border-bottom: 1px solid #d8e3f1;
+}
+
+.table-wrap td {
+    padding: 16px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #29486e;
+    border-bottom: 1px solid #edf2f8;
+}
+
+.table-wrap tbody tr:hover {
+    background: #f7fbff;
+}
+
+/* ===== GRADE ===== */
+.grade-pill {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #eaf2ff;
+    color: #2c67c7;
+    font-weight: 800;
+    font-size: 14px;
+}
+
+/* ===== PROFILE GRID ===== */
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(260px, 1fr));
+    gap: 18px 22px;
+}
+
+.profile-item {
+    background: #ffffff;
+    border: 1px solid #d8e3f1;
+    border-radius: 18px;
+    padding: 18px 20px;
+}
+
+.profile-item span {
+    font-size: 13px;
+    font-weight: 700;
+    color: #6783a6;
+    text-transform: uppercase;
+}
+
+.profile-item strong {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1f3f68;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-top: 10px;
+}
+
+.chart-box {
+    background: #ffffff;
+    border: 1px solid #d8e3f1;
+    border-radius: 22px;
+    padding: 22px;
+    min-height: 380px;
+    box-shadow: 0 6px 18px rgba(31, 63, 104, 0.08);
+}
+
+.chart-box h3 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1f3f68;
+    margin-bottom: 18px;
+}
+
+.chart-box canvas {
+    width: 100% !important;
+    height: 290px !important;
+}
+
+@media (max-width: 950px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== PROFILE GRID ===== */
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+    margin-top: 10px;
+}
+.progress-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-top: 24px;
+}
+
+.progress-stat-card {
+    background: linear-gradient(135deg, #ffffff, #f7fbff);
+    border: 1px solid #d8e3f1;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(31, 63, 104, 0.08);
+}
+
+.progress-stat-card span {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #6b87a8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+}
+
+.progress-stat-card strong {
+    font-size: 30px;
+    font-weight: 800;
+    color: #1f3f68;
+}
+
+@media (max-width: 1100px) {
+    .progress-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 700px) {
+    .progress-stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== PROFILE CARD ===== */
+.profile-item {
+    background: linear-gradient(135deg, #ffffff, #f7fbff);
+    border: 1px solid #d6e2f1;
+    border-radius: 22px;
+    padding: 22px 24px;
+    box-shadow: 0 8px 20px rgba(31, 63, 104, 0.08);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    transition: all 0.25s ease;
+}
+
+/* hover effect (premium feel) */
+.profile-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(31, 63, 104, 0.15);
+}
+
+/* ===== LABEL ===== */
+.profile-item span {
+    font-size: 12px;
+    font-weight: 700;
+    color: #6b87a8;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+}
+
+/* ===== VALUE ===== */
+.profile-item strong {
+    font-size: 26px;
+    font-weight: 800;
+    color: #1f3f68;
+    line-height: 1.3;
+}
+
+/* smaller values */
+.profile-item:nth-child(2) strong,
+.profile-item:nth-child(3) strong {
+    font-size: 20px;
+}
+
+/* ===== SPECIAL HIGHLIGHT CARDS ===== */
+.profile-item:nth-child(8), /* CGPA */
+.profile-item:nth-child(9)  /* Credits */
+{
+    background: linear-gradient(135deg, #4e89d8, #6aa3e8);
+    color: white;
+}
+
+.profile-item:nth-child(8) span,
+.profile-item:nth-child(9) span {
+    color: rgba(255,255,255,0.8);
+}
+
+.profile-item:nth-child(8) strong,
+.profile-item:nth-child(9) strong {
+    color: white;
+    font-size: 30px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+}

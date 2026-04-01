@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Electives</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-bg"></div>
+    <div class="dashboard-overlay"></div>
+
+    <div class="dashboard-layout" id="dashboardLayout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-top">
+                <div class="brand-wrap">
+                    <div class="brand-text">
+                        <h2>Admin Portal</h2>
+                        <p>Academic Assistance</p>
+                    </div>
+                </div>
+
+                <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle sidebar">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('admin_dashboard') }}"
+                   class="nav-item {% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="{{ url_for('admin_materials') }}"
+                   class="nav-item {% if request.endpoint == 'admin_materials' %}active{% endif %}">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Study Materials</span>
+                </a>
+
+                <a href="{{ url_for('admin_elective_materials') }}"
+                   class="nav-item {% if request.endpoint == 'admin_elective_materials' %}active{% endif %}">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>Electives</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <section class="hero-card">
+                <div class="hero-text">
+                    <p class="hero-subtitle">Manage</p>
+                    <h1>Electives & Elective Materials</h1>
+                    <p class="hero-desc">Create electives, search them, and upload elective materials centrally.</p>
+                </div>
+
+                <div class="hero-avatar">
+                    {{ user_initial }}
+                </div>
+            </section>
+
+            <div class="admin-content-stack">
+                <section class="admin-panel">
+                    <h2>Create Elective</h2>
+                    <p class="section-subtext">Add new electives available for a semester and assign the faculty in charge.</p>
+
+                    <form method="POST" action="{{ url_for('admin_add_elective') }}" class="form-grid">
+                        <input type="number" name="semester" placeholder="Semester" required>
+                        <input type="text" name="subject" placeholder="Subject" required>
+                        <input type="text" name="course_code" placeholder="Course Code" required>
+                        <input type="text" name="type" placeholder="Type" required>
+                        <input type="number" name="credits" placeholder="Credits" required>
+                        <input type="text" name="faculty_incharge" placeholder="Faculty Incharge" required>
+                        <input type="text" name="description" placeholder="Description" class="full-width" required>
+                        <button type="submit" class="full-width">Add Elective</button>
+                    </form>
+                </section>
+
+                <section class="admin-panel">
+                    <h2>Search Electives</h2>
+                    <p class="section-subtext">Filter electives by semester, type, or subject name.</p>
+
+                    <form method="GET" class="filter-grid">
+                        <input type="number" name="semester" placeholder="Semester" value="{{ request.args.get('semester', '') }}">
+                        <input type="text" name="type" placeholder="Type" value="{{ request.args.get('type', '') }}">
+                        <input type="text" name="search" placeholder="Search by subject" value="{{ request.args.get('search', '') }}">
+                        <button type="submit">Search</button>
+                    </form>
+                </section>
+
+                <section class="admin-panel">
+                    <h2>Upload Elective Material</h2>
+                    <p class="section-subtext">Upload files for a selected elective.</p>
+
+                    <form method="POST" enctype="multipart/form-data" action="{{ url_for('admin_elective_materials') }}" class="form-grid">
+                        <select name="elective_id" required>
+                            <option value="">Select Elective</option>
+                            {% for elective in electives %}
+                                <option value="{{ elective['id'] }}">
+                                    Semester {{ elective["semester"] }} - {{ elective["subject"] }} ({{ elective["course_code"] }})
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        <input type="text" name="material_title" placeholder="Material Title" required>
+                        <input type="text" name="file_type" placeholder="File Type" required>
+                        <input type="file" name="file" class="full-width" required>
+                        <button type="submit" class="full-width">Upload Elective Material</button>
+                    </form>
+                </section>
+
+                <section class="admin-panel">
+                    <h2>Available Electives</h2>
+                    {% if electives %}
+                    <div class="table-wrap">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Semester</th>
+                                    <th>Subject</th>
+                                    <th>Course Code</th>
+                                    <th>Type</th>
+                                    <th>Credits</th>
+                                    <th>Faculty Incharge</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for elective in electives %}
+                                <tr>
+                                    <td>{{ elective["semester"] }}</td>
+                                    <td>{{ elective["subject"] }}</td>
+                                    <td>{{ elective["course_code"] }}</td>
+                                    <td>{{ elective["type"] }}</td>
+                                    <td>{{ elective["credits"] }}</td>
+                                    <td>{{ elective["faculty_incharge"] }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                        <p class="no-data">No electives found.</p>
+                    {% endif %}
+                </section>
+
+                <section class="admin-panel">
+                    <h2>All Elective Materials</h2>
+                    {% if uploaded_materials %}
+                    <div class="table-wrap">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Course Code</th>
+                                    <th>Type</th>
+                                    <th>Title</th>
+                                    <th>Uploaded By</th>
+                                    <th>File</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in uploaded_materials %}
+                                <tr>
+                                    <td>{{ item["subject"] }}</td>
+                                    <td>{{ item["course_code"] }}</td>
+                                    <td>{{ item["type"] }}</td>
+                                    <td>{{ item["material_title"] }}</td>
+                                    <td>{{ item["full_name"] }}</td>
+                                    <td>
+                                        {% if item["file_link"] %}
+                                            <a href="{{ url_for('serve_elective_material', filename=item['file_link']) }}" target="_blank" class="table-link">
+                                                View
+                                            </a>
+                                        {% else %}
+                                            <span class="muted-text">No file</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                        <p class="no-data">No elective materials available.</p>
+                    {% endif %}
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const toggleBtn = document.getElementById("menuToggle");
+        const layout = document.getElementById("dashboardLayout");
+
+        if (toggleBtn && layout) {
+            toggleBtn.addEventListener("click", () => {
+                layout.classList.toggle("collapsed");
+            });
+        }
+    </script>
+</body>
+</html>

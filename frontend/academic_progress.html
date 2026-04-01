@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Progress - Student Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile_progress.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-bg"></div>
+    <div class="dashboard-overlay"></div>
+
+    <div class="dashboard-layout" id="dashboardLayout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-top">
+                <div class="brand-wrap">
+                    <div class="brand-text">
+                        <h2>Student Portal</h2>
+                        <p>Academic Assistance</p>
+                    </div>
+                </div>
+
+                <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle sidebar">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('student_dashboard') }}" class="nav-item" data-label="Dashboard">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="{{ url_for('gpa_calculator_page') }}" class="nav-item" data-label="GPA Calculator">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span>GPA Calculator</span>
+                </a>
+
+                <a href="{{ url_for('materials_page') }}" class="nav-item" data-label="Study Materials">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Study Materials</span>
+                </a>
+
+                <a href="{{ url_for('electives_page') }}" class="nav-item" data-label="Electives">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>Electives</span>
+                </a>
+
+                <a href="{{ url_for('academic_progress_page') }}" class="nav-item active" data-label="Academic Progress">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Academic Progress</span>
+                </a>
+
+                <a href="{{ url_for('profile_page') }}" class="nav-item" data-label="Profile">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="{{ url_for('logout') }}" class="logout-btn" data-label="Logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <section class="hero-card">
+                <div class="hero-text">
+                    <p class="hero-subtitle">Welcome back,</p>
+                    <h1>{{ user.full_name }}</h1>
+                    <p class="hero-desc">Track your semester-wise academic progress.</p>
+                </div>
+
+                <div class="hero-avatar">
+                    {{ user_initial }}
+                </div>
+            </section>
+
+            <section class="content-card">
+                <div class="card-header">
+                    <div>
+                        <h2>Academic Progress</h2>
+                        <p>Visual summary of your semester-wise performance</p>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-box">
+                        <h3>Semester-wise GPA</h3>
+                        <canvas id="gpaChart"></canvas>
+                    </div>
+
+                    <div class="chart-box">
+                        <h3>Grade Distribution</h3>
+                        <canvas id="gradeChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="progress-stats-grid">
+                    <div class="progress-stat-card">
+                        <span>Total Subjects</span>
+                        <strong>{{ grades|length }}</strong>
+                    </div>
+
+                    <div class="progress-stat-card">
+                        <span>Current CGPA</span>
+                        <strong>{{ student_profile.cgpa }}</strong>
+                    </div>
+
+                    <div class="progress-stat-card">
+                        <span>Credits Earned</span>
+                        <strong>{{ student_profile.credits_earned }}</strong>
+                    </div>
+
+                    <div class="progress-stat-card">
+                        <span>Current Semester</span>
+                        <strong>{{ student_profile.semester }}</strong>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const semesterLabels = ('{{ semester_labels | tojson }}');
+        const semesterGpas = ('{{ semester_gpas | tojson }}');
+        const gradeDistribution = ('{{ grade_distribution | tojson }}');
+
+        const gpaCtx = document.getElementById('gpaChart').getContext('2d');
+        new Chart(gpaCtx, {
+            type: 'bar',
+            data: {
+                labels: semesterLabels,
+                datasets: [{
+                    label: 'GPA',
+                    data: semesterGpas,
+                    backgroundColor: [
+                        '#4e89d8',
+                        '#5b95df',
+                        '#6aa0e5',
+                        '#78abee',
+                        '#89b7f3',
+                        '#9cc3f8'
+                    ],
+                    borderRadius: 12,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10,
+                        ticks: {
+                            stepSize: 1
+                        },
+                        grid: {
+                            color: 'rgba(31, 63, 104, 0.08)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        const gradeCtx = document.getElementById('gradeChart').getContext('2d');
+        new Chart(gradeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(gradeDistribution),
+                datasets: [{
+                    data: Object.values(gradeDistribution),
+                    backgroundColor: [
+                        '#2f80ed',
+                        '#56a3ff',
+                        '#7db9ff',
+                        '#f2b94b',
+                        '#f2994a',
+                        '#eb5757',
+                        '#8d99ae'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                cutout: '65%'
+            }
+        });
+    </script>
+</body>
+</html>

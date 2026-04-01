@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Admin Study Materials</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
@@ -61,20 +61,9 @@
         <main class="main-content">
             <section class="hero-card">
                 <div class="hero-text">
-                    <p class="hero-subtitle">Welcome back,</p>
-                    <h1>{{ user["full_name"] }}</h1>
-                    <p class="hero-desc">Manage portal resources, users, electives, and uploaded academic content.</p>
-
-                    <div class="hero-badges">
-                        <div class="hero-badge">
-                            <i class="fa-solid fa-user-graduate"></i>
-                            <span>{{ total_students }} Students</span>
-                        </div>
-                        <div class="hero-badge">
-                            <i class="fa-solid fa-chalkboard-user"></i>
-                            <span>{{ total_faculty }} Faculty</span>
-                        </div>
-                    </div>
+                    <p class="hero-subtitle">Manage</p>
+                    <h1>Study Materials</h1>
+                    <p class="hero-desc">Upload and manage central study materials across semesters and subjects.</p>
                 </div>
 
                 <div class="hero-avatar">
@@ -83,60 +72,62 @@
             </section>
 
             <div class="admin-content-stack">
-                <section class="stats-grid">
-                    <div class="stat-card">
-                        <span>Total Students</span>
-                        <h3>{{ total_students }}</h3>
-                    </div>
-                    <div class="stat-card">
-                        <span>Total Faculty</span>
-                        <h3>{{ total_faculty }}</h3>
-                    </div>
-                    <div class="stat-card">
-                        <span>Total Materials</span>
-                        <h3>{{ total_materials }}</h3>
-                    </div>
-                    <div class="stat-card">
-                        <span>Total Electives</span>
-                        <h3>{{ total_electives }}</h3>
-                    </div>
+                <section class="admin-panel">
+                    <h2>Upload Study Material</h2>
+                    <p class="section-subtext">Add material semester-wise for students and faculty access.</p>
+
+                    <form method="POST" enctype="multipart/form-data" class="form-grid">
+                        <input type="number" name="semester" placeholder="Semester" required>
+                        <input type="text" name="subject" placeholder="Subject Name" required>
+                        <input type="text" name="course_code" placeholder="Course Code" required>
+                        <input type="text" name="material_title" placeholder="Material Title" required>
+                        <input type="text" name="file_type" placeholder="File Type" required>
+                        <input type="file" name="file" required class="full-width">
+                        <button type="submit" class="full-width">Upload Material</button>
+                    </form>
                 </section>
 
                 <section class="admin-panel">
-                    <h2>Admin Profile</h2>
-                    <div class="info-grid">
-                        <div class="info-box"><strong>Department:</strong> {{ admin["department"] }}</div>
-                        <div class="info-box"><strong>Designation:</strong> {{ admin["designation"] }}</div>
-                        <div class="info-box"><strong>Email:</strong> {{ user["email"] }}</div>
-                        <div class="info-box"><strong>Employee ID:</strong> {{ admin["employee_id"] }}</div>
-                    </div>
-                </section>
-
-                <section class="admin-panel">
-                    <h2>Recent Uploads</h2>
-                    {% if recent_uploads %}
+                    <h2>All Uploaded Materials</h2>
+                    {% if materials %}
                     <div class="table-wrap">
                         <table class="styled-table">
                             <thead>
                                 <tr>
+                                    <th>Semester</th>
+                                    <th>Subject</th>
+                                    <th>Course Code</th>
                                     <th>Title</th>
                                     <th>Type</th>
                                     <th>Uploaded By</th>
+                                    <th>File</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for item in recent_uploads %}
+                                {% for item in materials %}
                                 <tr>
+                                    <td>{{ item["semester"] }}</td>
+                                    <td>{{ item["subject"] }}</td>
+                                    <td>{{ item["course_code"] }}</td>
                                     <td>{{ item["material_title"] }}</td>
                                     <td>{{ item["file_type"] }}</td>
                                     <td>{{ item["full_name"] }}</td>
+                                    <td>
+                                        {% if item["file_link"] %}
+                                            <a href="{{ url_for('serve_study_material', filename=item['file_link']) }}" target="_blank" class="table-link">
+                                                View
+                                            </a>
+                                        {% else %}
+                                            <span class="muted-text">No file</span>
+                                        {% endif %}
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
                     {% else %}
-                        <p class="no-data">No uploads available.</p>
+                        <p class="no-data">No materials available.</p>
                     {% endif %}
                 </section>
             </div>

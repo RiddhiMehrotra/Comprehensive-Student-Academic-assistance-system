@@ -141,7 +141,7 @@
             <section class="dashboard-grid">
 
                 <!-- Timetable -->
-                <div class="content-card">
+                <div class="content-card timetable-card">
                     <div class="card-header">
                         <div>
                             <h2>Today’s Timetable</h2>
@@ -163,35 +163,28 @@
                     <div class="timetable-list">
                         {% if timetable %}
                             {% for row in timetable %}
-                            <div class="timetable-item">
+                            <div class="timetable-item compact-item">
                                 <div class="time-pill">{{ row.start_time }} - {{ row.end_time }}</div>
-
-                                <div class="tt-info">
+                                <div class="tt-info compact-info">
                                     <h4>
                                         {% if row.subject is defined and row.subject %}
-                                            {{ row.subject }}
+                                        {{ row.subject }}
                                         {% elif row.subject_name is defined and row.subject_name %}
-                                            {{ row.subject_name }}
+                                        {{ row.subject_name }}
                                         {% elif row.course_name is defined and row.course_name %}
-                                            {{ row.course_name }}
+                                        {{ row.course_name }}
                                         {% else %}
-                                            Subject Not Available
+                                        Subject Not Available
                                         {% endif %}
                                     </h4>
-
-                                    <p>
-                                        {% if row.faculty is defined and row.faculty %}
-                                            {{ row.faculty }}
-                                        {% elif row.faculty_name is defined and row.faculty_name %}
-                                            {{ row.faculty_name }}
+                                    <p class="venue-line">
+                                        {% if row.room is defined and row.room %}
+                                        Venue: {{ row.room }}
                                         {% else %}
-                                            -
+                                        Venue: Not Available
                                         {% endif %}
-                                        {% if row.room_no is defined and row.room_no %} • {{ row.room_no }}{% endif %}
                                     </p>
-                                </div>
-
-                                <div class="day-pill">DO {{ row.day_order }}</div>
+                                </div>    
                             </div>
                             {% endfor %}
                         {% else %}
@@ -236,32 +229,86 @@
                 </div>
 
                 <!-- Enrolled Subjects -->
-                <div class="content-card">
-                    <div class="card-header">
+                <section class="dashboard-card enrolled-courses-card">
+                    <div class="section-head">
                         <div>
-                            <h2>Enrolled Subjects</h2>
-                            <p>Your current registered courses</p>
-                        </div>
-                    </div>
+                            <h2>Course Overview</h2>
 
-                    <div class="subject-list">
-                        {% for subject in enrolled_subjects %}
-                        <div class="subject-item">
-                            <div>
-                                <h4>{{ subject.subject }}</h4>
-                                <p>{{ subject.course_code }}</p>
-                            </div>
-                            <div class="subject-meta">
-                                <span>{{ subject.credits }} Credits</span>
-                                <strong>{{ subject.grade }}</strong>
-                            </div>
+                            <p>View completed courses with grades and current semester subjects in progress</p>
                         </div>
-                        {% endfor %}
                     </div>
+                    <div class="courses-split-layout">
+        <!-- Completed Courses -->
+         <div class="courses-panel">
+            <div class="courses-panel-head">
+                <h3>Completed Courses</h3>
+                <p>Previous semester subjects with grades</p>
+            </div>
+
+            {% if completed_courses %}
+                <div class="subjects-grid limited-grid" id="completedCoursesGrid">
+                    {% for item in completed_courses %}
+                        <div class="subject-pill {% if loop.index > 3 %}extra-course hidden-course{% endif %}">
+                            <div class="subject-top">
+                                <span class="subject-code">{{ item.course_code }}</span>
+                                <span class="subject-sem">Sem {{ item.semester }}</span>
+                            </div>
+                            <div class="subject-name">{{ item.subject }}</div>
+                            <div class="subject-grade">Grade: {{ item.grade }}</div>
+                        </div>
+                    {% endfor %}
                 </div>
 
+                {% if completed_courses|length > 3 %}
+                    <button class="more-btn" type="button" onclick="toggleCourses('completedCoursesGrid', this)">
+                        More
+                    </button>
+                {% endif %}
+            {% else %}
+                <div class="empty-state small-empty">
+                    <i class="fa-solid fa-book"></i>
+                    <p>No completed courses available.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Current Semester Courses -->
+        <div class="courses-panel">
+            <div class="courses-panel-head">
+                <h3>Current Semester Courses</h3>
+                <p>Subjects currently being undertaken</p>
+            </div>
+
+            {% if current_sem_courses %}
+                <div class="subjects-grid limited-grid" id="currentCoursesGrid">
+                    {% for item in current_sem_courses %}
+                        <div class="subject-pill {% if loop.index > 3 %}extra-course hidden-course{% endif %}">
+                            <div class="subject-top">
+                                <span class="subject-code">{{ item.course_code }}</span>
+                                <span class="subject-sem current-sem-badge">Current</span>
+                            </div>
+                            <div class="subject-name">{{ item.subject }}</div>
+                            <div class="subject-grade in-progress">Grade: In Progress</div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                {% if current_sem_courses|length > 3 %}
+                    <button class="more-btn" type="button" onclick="toggleCourses('currentCoursesGrid', this)">
+                        More
+                    </button>
+                {% endif %}
+            {% else %}
+                <div class="empty-state small-empty">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <p>No current semester courses available.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
                 <!-- Profile Preview -->
-                <div class="content-card">
+                <div class="content-card full-width">
                     <div class="card-header">
                         <div>
                             <h2>Profile Preview</h2>
@@ -305,5 +352,19 @@
             dashboardLayout.classList.toggle("collapsed");
         });
     </script>
+    <script>
+function toggleCourses(gridId, button) {
+    const grid = document.getElementById(gridId);
+    const hiddenItems = grid.querySelectorAll('.extra-course');
+
+    const isHidden = hiddenItems.length > 0 && hiddenItems[0].classList.contains('hidden-course');
+
+    hiddenItems.forEach(item => {
+        item.classList.toggle('hidden-course');
+    });
+
+    button.textContent = isHidden ? 'Show Less' : 'More';
+}
+</script>
 </body>
 </html>

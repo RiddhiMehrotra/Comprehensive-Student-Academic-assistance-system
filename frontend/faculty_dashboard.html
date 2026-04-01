@@ -4,126 +4,254 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Faculty Dashboard</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/faculty.css') }}">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../static/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
-    <div class="dashboard-page">
 
-        <aside class="sidebar">
-            <div>
-                <div class="brand">
-                    <div class="brand-icon">{{ user_initial }}</div>
+<div class="dashboard-bg"></div>
+<div class="dashboard-overlay"></div>
+
+<div class="dashboard-layout" id="dashboardLayout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-top">
+            <div class="brand-wrap">
+                <div class="brand-text">
+                    <h2>Faculty Portal</h2>
+                    <p>Academic Assistance</p>
+                </div>
+            </div>
+
+            <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle sidebar">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="{{ url_for('faculty_dashboard') }}" class="nav-item active">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('faculty_materials') }}" class="nav-item">
+                <i class="fa-solid fa-book-open"></i>
+                <span>Study Materials</span>
+            </a>
+
+            <a href="{{ url_for('faculty_elective_material') }}" class="nav-item">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>Elective Materials</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="{{ url_for('logout') }}" class="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <!-- HERO -->
+        <section class="hero-card">
+            <div class="hero-text">
+                <p class="hero-subtitle">Welcome back,</p>
+                <h1>{{ user.full_name }}</h1>
+                <p class="hero-desc">View your teaching schedule, profile details, and handled subjects in one place.</p>
+
+                <div class="hero-badges">
+                    <div class="hero-badge">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <span>
+                            {% if today_day_order %}
+                                Day Order {{ today_day_order }}
+                            {% else %}
+                                No Day Order
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="hero-badge">
+                        <i class="fa-solid fa-book"></i>
+                        <span>{{ total_subjects }} Subjects</span>
+                    </div>
+
+                    <div class="hero-badge">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                        <span>{{ total_classes }} Total Classes</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-avatar">
+                {{ user_initial }}
+            </div>
+        </section>
+
+        <!-- FACULTY CONTENT -->
+        <div class="faculty-container">
+
+            <!-- STATS -->
+            <div class="faculty-stats">
+                <div class="faculty-card">
+                    <h3>Total Classes</h3>
+                    <p>{{ total_classes }}</p>
+                </div>
+
+                <div class="faculty-card">
+                    <h3>Subjects</h3>
+                    <p>{{ total_subjects }}</p>
+                </div>
+
+                <div class="faculty-card">
+                    <h3>Today Classes</h3>
+                    <p>{{ today_classes }}</p>
+                </div>
+            </div>
+
+            <!-- COMBINED PROFILE + SUBJECTS -->
+            <div class="faculty-main-section">
+                <div class="panel combined-card">
+
+                    <!-- LEFT: PROFILE -->
+                    <div class="profile-section">
+                        <h2>Faculty Profile</h2>
+
+                        <div class="profile-info">
+                            <div class="profile-row">
+                                <span class="profile-label">Employee ID</span>
+                                <b class="profile-value">{{ faculty_profile.employee_id }}</b>
+                            </div>
+
+                            <div class="profile-row">
+                                <span class="profile-label">Department</span>
+                                <b class="profile-value">{{ faculty_profile.department }}</b>
+                            </div>
+
+                            <div class="profile-row">
+                                <span class="profile-label">Designation</span>
+                                <b class="profile-value">{{ faculty_profile.designation }}</b>
+                            </div>
+
+                            <div class="profile-row">
+                                <span class="profile-label">Specialization</span>
+                                <b class="profile-value">{{ faculty_profile.specialization }}</b>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: SUBJECTS -->
+                    <div class="subjects-section">
+                        <h2>
+                            Subjects Handled
+                            <span class="badge">{{ subjects|length }}</span>
+                        </h2>
+
+                        <div class="subjects-list">
+                            {% for subject in subjects %}
+                            <div class="subject-item">
+                                <div class="subject-left">
+                                    
+                                    <div class="subject-info">
+                                        <h3>{{ subject.subject }}</h3>
+                                        <p>{{ subject.course_code }}</p>
+                                    </div>
+                                </div>
+                                <div class="subject-arrow">→</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- WEEKLY SCHEDULE -->
+            <section class="timetable-panel">
+                <div class="timetable-panel-top">
                     <div>
-                        <h2>Faculty Portal</h2>
-                        <p>Academic Assistance</p>
+                        <h2>Weekly Schedule</h2>
+                        <p class="timetable-subtext">Day-wise overview of classes assigned for the week.</p>
                     </div>
                 </div>
 
-                <nav class="sidebar-nav">
-                    <a href="{{ url_for('faculty_dashboard') }}" class="nav-link active"> Dashboard</a>
-                    <a href="#" class="nav-link"> Courses</a>
-                    <a href="#" class="nav-link"> Student Records</a>
-                    <a href="#" class="nav-link"> Materials</a>
-                    <a href="#" class="nav-link"> Profile</a>
-                </nav>
-            </div>
+                <div class="faculty-weekly-board">
+                    {% for day in [1, 2, 3, 4, 5] %}
+                        {% set day_classes = full_timetable | selectattr("day_order", "equalto", day) | list %}
 
-            <div class="sidebar-bottom">
-                <a href="{{ url_for('logout') }}" class="logout-btn">↪ Logout</a>
-            </div>
-        </aside>
+                        <div class="faculty-day-card {% if today_day_order == day %}active-day{% endif %}">
+                            <div class="faculty-day-card-header">
+                                <div class="faculty-day-heading">
+                                    <h3>Day {{ day }}</h3>
+                                    <p>
+                                        {{ day_classes|length }}
+                                        class{{ 'es' if day_classes|length != 1 else '' }}
+                                    </p>
+                                </div>
 
-        <main class="main-content">
-            <header class="topbar">
-                <div>
-                    <p class="welcome-text">Welcome back,</p>
-                    <h1>{{ user["full_name"] }}</h1>
-                    <p class="sub-text">Manage courses, materials, and student academic records.</p>
-                </div>
+                                {% if today_day_order == day %}
+                                    <span class="faculty-day-badge">Today</span>
+                                {% endif %}
+                            </div>
 
-                <div class="profile-badge">
-                    {{ user_initial }}
-                </div>
-            </header>
+                            <div class="faculty-day-card-body">
+                                {% if day_classes %}
+                                    {% for item in day_classes %}
+                                        <div class="faculty-class-item">
+                                            <div class="faculty-class-time">
+                                                <span>{{ item.start_time }}</span>
+                                                <small>{{ item.end_time }}</small>
+                                            </div>
 
-            <section class="summary-grid">
-                <div class="summary-card">
-                    <span class="card-label">Role</span>
-                    <h3>Faculty</h3>
-                    
-                </div>
+                                            <div class="faculty-class-details">
+                                                <h4>{{ item.subject }}</h4>
+                                                <p>{{ item.course_code }}</p>
+                                            </div>
 
-                <div class="summary-card">
-                    <span class="card-label">Department</span>
-                    <h3>{{ faculty["department"] if faculty else "N/A" }}</h3>
-                    
-                </div>
-
-                <div class="summary-card">
-                    <span class="card-label">Designation</span>
-                    <h3>{{ faculty["designation"] if faculty else "N/A" }}</h3>
-                    
-                </div>
-
-                <div class="summary-card">
-                    <span class="card-label">Email</span>
-                    <h3 class="email-text">{{ user["email"] }}</h3>
-                    
+                                            <div class="faculty-class-room">
+                                                {{ item.room }}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="faculty-empty-day">
+                                        <i class="fa-regular fa-calendar-xmark"></i>
+                                        <span>No classes scheduled</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
             </section>
 
-            <section class="panel">
-                <div class="panel-header">
-                    <h2>Faculty Profile</h2>
-                </div>
+        </div>
 
-                <div class="profile-grid">
-                    <div class="profile-item">
-                        <span>Full Name</span>
-                        <strong>{{ user["full_name"] }}</strong>
-                    </div>
+    </main>
 
+</div>
 
+<!-- TOGGLE -->
+<script>
+const toggleBtn = document.getElementById("menuToggle");
+const layout = document.getElementById("dashboardLayout");
 
+if (toggleBtn && layout) {
+    toggleBtn.addEventListener("click", () => {
+        layout.classList.toggle("collapsed");
+    });
+}
+</script>
 
-                    <div class="profile-item">
-                        <span>Designation</span>
-                        <strong>{{ faculty["designation"] if faculty else "N/A" }}</strong>
-                    </div>
-                </div>
-            </section>
-
-            <section class="panel">
-                <div class="panel-header">
-                    <h2>Faculty Actions</h2>
-                </div>
-
-                <div class="card-grid">
-                    <div class="mini-card">
-                        <h3>Manage Courses</h3>
-                        <p>View and organize assigned courses and teaching responsibilities.</p>
-                    </div>
-
-                    <div class="mini-card">
-                        <h3>Upload Materials</h3>
-                        <p>Provide lecture notes, PDFs, and learning resources for students.</p>
-                    </div>
-
-                    <div class="mini-card">
-                        <h3>Student Progress</h3>
-                        <p>Track academic records, grades, and performance insights.</p>
-                    </div>
-
-                    <div class="mini-card">
-                        <h3>Announcements</h3>
-                        <p>Share updates, notices, and class-related information.</p>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
 </body>
 </html>

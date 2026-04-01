@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Elective Materials</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/faculty_elective.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-bg"></div>
+    <div class="dashboard-overlay"></div>
+
+    <div class="dashboard-layout" id="dashboardLayout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-top">
+                <div class="brand-wrap">
+                    <div class="brand-text">
+                        <h2>Faculty Portal</h2>
+                        <p>Academic Assistance</p>
+                    </div>
+                </div>
+
+                <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle sidebar">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('faculty_dashboard') }}"
+                   class="nav-item {% if request.endpoint == 'faculty_dashboard' %}active{% endif %}">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="{{ url_for('faculty_materials') }}"
+                   class="nav-item {% if request.endpoint == 'faculty_materials' %}active{% endif %}">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Study Materials</span>
+                </a>
+
+                <a href="{{ url_for('faculty_elective_material') }}"
+                   class="nav-item {% if request.endpoint == 'faculty_elective_material' %}active{% endif %}">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>Elective Materials</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Hero -->
+            <section class="hero-card">
+                <div class="hero-text">
+                    
+                    <h1>{{ user.full_name }}</h1>
+                    <p class="hero-desc">Search electives, upload elective resources, and manage uploaded files.</p>
+
+                    <div class="hero-badges">
+                        <div class="hero-badge">
+                            <i class="fa-solid fa-layer-group"></i>
+                            <span>Elective Materials</span>
+                        </div>
+                        <div class="hero-badge">
+                            <i class="fa-solid fa-file-arrow-up"></i>
+                            <span>{{ uploaded_materials|length if uploaded_materials else 0 }} Uploads</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-avatar">
+                    {{ user_initial }}
+                </div>
+            </section>
+
+            <div class="main-content-stack">
+
+                <!-- Search Panel -->
+                <section class="elective-panel">
+                    <h2>Search Electives</h2>
+                    <p class="section-subtext">Filter by semester, type, or subject name.</p>
+
+                    <form method="GET" class="filter-grid">
+                        <input type="number" name="semester" placeholder="Semester"
+                               value="{{ request.args.get('semester', '') }}">
+                        <input type="text" name="type" placeholder="Type"
+                               value="{{ request.args.get('type', '') }}">
+                        <input type="text" name="search" placeholder="Search by subject"
+                               value="{{ request.args.get('search', '') }}">
+                        <button type="submit">Search</button>
+                    </form>
+                </section>
+
+                <!-- Upload Panel -->
+                <section class="elective-panel">
+                    <h2>Upload Elective Material</h2>
+                    <p class="section-subtext">Choose an elective and upload material for it.</p>
+
+                    <form method="POST" enctype="multipart/form-data" class="form-grid">
+                        <select name="elective_id" required>
+                            <option value="">Select Elective</option>
+                            {% for elective in electives %}
+                                <option value="{{ elective['id'] }}">
+                                    Semester {{ elective["semester"] }} - {{ elective["subject"] }} ({{ elective["course_code"] }})
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        <input type="text" name="material_title" placeholder="Material Title" required>
+
+                        <input type="text" name="file_type" placeholder="File Type" required>
+
+                        <input type="file" name="file" class="full-width" required>
+
+                        <button type="submit" class="full-width">Upload Elective Material</button>
+                    </form>
+                </section>
+
+                <!-- Available Electives -->
+                <section class="elective-panel">
+                    <h2>Available Electives</h2>
+                    <p class="section-subtext">Electives assigned under your handling.</p>
+
+                    {% if electives %}
+                    <div class="table-wrap">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Semester</th>
+                                    <th>Subject</th>
+                                    <th>Course Code</th>
+                                    <th>Type</th>
+                                    <th>Credits</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for elective in electives %}
+                                <tr>
+                                    <td>{{ elective["semester"] }}</td>
+                                    <td>{{ elective["subject"] }}</td>
+                                    <td>{{ elective["course_code"] }}</td>
+                                    <td>{{ elective["type"] }}</td>
+                                    <td>{{ elective["credits"] }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                        <p class="no-data">No electives found.</p>
+                    {% endif %}
+                </section>
+
+                <!-- Uploaded Materials -->
+                <section class="elective-panel">
+                    <h2>Uploaded Elective Materials</h2>
+                    <p class="section-subtext">Materials uploaded by you for elective subjects.</p>
+
+                    {% if uploaded_materials %}
+                    <div class="table-wrap">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Course Code</th>
+                                    <th>Type</th>
+                                    <th>Title</th>
+                                    <th>File</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in uploaded_materials %}
+                                <tr>
+                                    <td>{{ item["subject"] }}</td>
+                                    <td>{{ item["course_code"] }}</td>
+                                    <td>{{ item["type"] }}</td>
+                                    <td>{{ item["material_title"] }}</td>
+                                    <td>
+                                        {% if item["file_link"] %}
+                                            <a href="{{ url_for('serve_elective_material', filename=item['file_link']) }}"
+                                               target="_blank"
+                                               class="table-link">
+                                                View
+                                            </a>
+                                        {% else %}
+                                            <span class="muted-text">No file</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                        <p class="no-data">No elective materials uploaded yet.</p>
+                    {% endif %}
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const toggleBtn = document.getElementById("menuToggle");
+        const layout = document.getElementById("dashboardLayout");
+
+        if (toggleBtn && layout) {
+            toggleBtn.addEventListener("click", () => {
+                layout.classList.toggle("collapsed");
+            });
+        }
+    </script>
+</body>
+</html>

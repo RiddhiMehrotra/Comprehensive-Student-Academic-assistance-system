@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Student Portal</title>
+    <link rel="stylesheet" href="../static/css/dashboard.css">
+    <link rel="stylesheet" href="../static/css/profile_progress.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-bg"></div>
+    <div class="dashboard-overlay"></div>
+
+    <div class="dashboard-layout" id="dashboardLayout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-top">
+                <div class="brand-wrap">
+                    <div class="brand-text">
+                        <h2>Student Portal</h2>
+                        <p>Academic Assistance</p>
+                    </div>
+                </div>
+
+                <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle sidebar">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('student_dashboard') }}" class="nav-item" data-label="Dashboard">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="{{ url_for('gpa_calculator_page') }}" class="nav-item" data-label="GPA Calculator">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span>GPA Calculator</span>
+                </a>
+
+                <a href="{{ url_for('materials_page') }}" class="nav-item" data-label="Study Materials">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Study Materials</span>
+                </a>
+
+                <a href="{{ url_for('electives_page') }}" class="nav-item" data-label="Electives">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>Electives</span>
+                </a>
+
+                <a href="{{ url_for('academic_progress_page') }}" class="nav-item" data-label="Academic Progress">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Academic Progress</span>
+                </a>
+
+                <a href="{{ url_for('profile_page') }}" class="nav-item active" data-label="Profile">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="{{ url_for('logout') }}" class="logout-btn" data-label="Logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <section class="hero-card">
+                <div class="hero-text">
+                    <p class="hero-subtitle">Student Profile</p>
+                    <h1>{{ user.full_name }}</h1>
+                    <p class="hero-desc">Your academic and personal profile details.</p>
+                </div>
+
+                <div class="hero-avatar">
+                    {{ user_initial }}
+                </div>
+            </section>
+
+            <section class="content-card">
+                <div class="card-header">
+                    <div>
+                        <h2>Profile Details</h2>
+                        <p>Official student information</p>
+                    </div>
+                </div>
+
+                <div class="profile-grid">
+                    <div class="profile-item">
+    <span><i class="fa-solid fa-user"></i> Full Name</span>
+    <strong>{{ user.full_name }}</strong>
+</div>
+
+<div class="profile-item">
+    <span><i class="fa-solid fa-envelope"></i> Email</span>
+    <strong>{{ user.email }}</strong>
+</div>
+
+<div class="profile-item">
+    <span><i class="fa-solid fa-id-card"></i> Register Number</span>
+    <strong>{{ student_profile.register_number }}</strong>
+</div>
+                    <div class="profile-item"><span>Department</span><strong>{{ student_profile.department }}</strong></div>
+                    <div class="profile-item"><span>Program</span><strong>{{ student_profile.program }}</strong></div>
+                    <div class="profile-item"><span>Semester</span><strong>{{ student_profile.semester }}</strong></div>
+                    <div class="profile-item"><span>Section</span><strong>{{ student_profile.section }}</strong></div>
+                    <div class="profile-item"><span>CGPA</span><strong>{{ student_profile.cgpa }}</strong></div>
+                    <div class="profile-item"><span>Credits Earned</span><strong>{{ student_profile.credits_earned }}</strong></div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

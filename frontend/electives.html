@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Electives - Student Portal</title>
-    <link rel="stylesheet" href="../static/css/electives.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/electives.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,7 +16,6 @@
 
     <div class="electives-layout" id="dashboardLayout">
 
-        <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-top">
                 <div class="brand-wrap">
@@ -71,10 +70,8 @@
             </div>
         </aside>
 
-        <!-- Main content -->
         <main class="main-content">
 
-            <!-- Hero -->
             <section class="hero-card">
                 <div class="hero-text">
                     <p class="hero-subtitle">Explore</p>
@@ -98,7 +95,6 @@
                 </div>
             </section>
 
-            <!-- Electives Grid -->
             <section class="electives-grid">
                 {% if electives %}
                     {% for elective in electives %}
@@ -158,13 +154,50 @@
                                     </ul>
                                 </div>
                             </div>
+
+                            <div class="elective-materials-box">
+                                <h3>Uploaded Materials</h3>
+
+                                {% if materials_by_elective.get(elective.id) %}
+                                    <div class="elective-material-list">
+                                        {% for material in materials_by_elective[elective.id] %}
+                                            <div class="elective-material-item">
+                                                <div class="material-top">
+                                                    <h4>{{ material.material_title }}</h4>
+                                                    <span class="material-type">{{ material.file_type }}</span>
+                                                </div>
+
+                                                <p class="material-meta">
+                                                    <strong>Uploaded by:</strong>
+                                                    {{ material.uploaded_by_name }} ({{ material.uploaded_by_role }})
+                                                </p>
+
+                                                <p class="material-meta">
+                                                    <strong>Uploaded on:</strong>
+                                                    {{ material.uploaded_at }}
+                                                </p>
+
+                                                <a href="{{ url_for('serve_elective_material', filename=material.file_link) }}" target="_blank" class="material-link">
+                                                    <i class="fa-solid fa-file-arrow-down"></i>
+                                                    <span>View / Download</span>
+                                                </a>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <div class="empty-material-state">
+                                        <i class="fa-regular fa-folder-open"></i>
+                                        <p>No materials uploaded yet for this elective.</p>
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     {% endfor %}
                 {% else %}
                     <div class="content-card">
                         <div class="empty-state">
-                            <i class="fa-regular fa-layer-group"></i>
+                            <i class="fa-solid fa-layer-group"></i>
                             <p>No elective courses available at the moment.</p>
                         </div>
                     </div>
@@ -175,7 +208,6 @@
     </div>
 
     <script>
-        // Sidebar toggle functionality
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const dashboardLayout = document.getElementById('dashboardLayout');
@@ -185,7 +217,6 @@
             dashboardLayout.classList.toggle('sidebar-active');
         });
 
-        // Close sidebar when clicking outside on mobile
         document.addEventListener('click', (e) => {
             if (window.innerWidth <= 768 && !sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
                 sidebar.classList.remove('active');
