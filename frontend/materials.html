@@ -229,11 +229,11 @@
 
                                 <div class="material-actions">
                                     {% if material.file_link and material.file_link != '#' %}
-                                        <a href="/{{ material.file_link }}" class="material-btn primary" target="_blank">
+                                        <a href="{{ url_for('serve_study_material', filename=material.file_link) }}" class="material-btn primary" target="_blank">
                                             <i class="fa-solid fa-eye"></i>
                                             View Material
                                         </a>
-                                        <a href="/{{ material.file_link }}" class="material-btn secondary" download>
+                                        <a href="{{ url_for('serve_study_material', filename=material.file_link) }}" class="material-btn secondary" download>
                                             <i class="fa-solid fa-download"></i>
                                             Download
                                         </a>

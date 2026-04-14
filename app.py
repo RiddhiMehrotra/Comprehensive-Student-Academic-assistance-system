@@ -116,13 +116,42 @@ ensure_schema_updates()
 # -----------------------------
 # Utility helpers
 # -----------------------------
+
+def load_local_env():
+    env_path = os.path.join(os.path.dirname(__file__), ".env")
+    if os.path.exists(env_path):
+        with open(env_path, "r", encoding="utf-8") as env_file:
+            for line in env_file:
+                line = line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, value = line.split("=", 1)
+                key = key.strip()
+                value = value.strip().strip('"').strip("'")
+                if key and key not in os.environ:
+                    os.environ[key] = value
+
+
+load_local_env()
+
+
 def generate_otp():
     return str(random.randint(100000, 999999))
 
 
 def send_email_otp(receiver_email, otp):
-    sender_email = os.getenv("MAIL_EMAIL", "your_email@gmail.com")
-    sender_password = os.getenv("MAIL_APP_PASSWORD", "your_app_password")
+    sender_email = os.getenv("MAIL_EMAIL")
+    sender_password = os.getenv("MAIL_APP_PASSWORD")
+    mail_server = os.getenv("MAIL_SERVER", "smtp.gmail.com")
+    mail_port = int(os.getenv("MAIL_PORT", "587"))
+    use_ssl = os.getenv("MAIL_USE_SSL", "false").lower() in ("1", "true", "yes")
+    use_tls = os.getenv("MAIL_USE_TLS", "true").lower() in ("1", "true", "yes")
+
+    if not sender_email or not sender_password:
+        raise ValueError(
+            "Email credentials are not configured. "
+            "Set MAIL_EMAIL and MAIL_APP_PASSWORD in the environment or .env file."
+        )
 
     subject = "Password Reset OTP"
     body = f"""
@@ -142,10 +171,16 @@ Student Assistance Portal
     msg["From"] = sender_email
     msg["To"] = receiver_email
 
-    with smtplib.SMTP("smtp.gmail.com", 587) as server:
-        server.starttls()
-        server.login(sender_email, sender_password)
-        server.send_message(msg)
+    if use_ssl:
+        with smtplib.SMTP_SSL(mail_server, mail_port) as server:
+            server.login(sender_email, sender_password)
+            server.send_message(msg)
+    else:
+        with smtplib.SMTP(mail_server, mail_port) as server:
+            if use_tls:
+                server.starttls()
+            server.login(sender_email, sender_password)
+            server.send_message(msg)
 
 
 def calculate_gpa_from_grades(grades):

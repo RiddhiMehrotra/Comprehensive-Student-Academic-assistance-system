@@ -10,7 +10,16 @@ def initialize_database():
     with open(SQL_FILE, "r", encoding="utf-8") as file:
         sql_script = file.read()
 
-    cursor.executescript(sql_script)
+    # Split by semicolon and execute statements individually
+    statements = sql_script.split(';')
+    for statement in statements:
+        statement = statement.strip()
+        if statement:
+            try:
+                cursor.execute(statement)
+            except Exception as e:
+                print(f"Warning: {e}")
+    
     conn.commit()
     conn.close()
 

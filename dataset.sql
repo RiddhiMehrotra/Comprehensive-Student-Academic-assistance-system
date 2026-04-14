@@ -57,7 +57,7 @@ CREATE TABLE admin_profiles (
 -- TIMETABLES
 -- =========================
 CREATE TABLE student_timetable (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY,
     student_id INTEGER NOT NULL,
     day_order INTEGER NOT NULL,
     subject TEXT NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE student_timetable (
 );
 
 CREATE TABLE faculty_timetable (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY,
     faculty_id INTEGER,
     day_order INTEGER,
     subject TEXT,
@@ -83,7 +83,7 @@ CREATE TABLE faculty_timetable (
 -- GRADES
 -- =========================
 CREATE TABLE student_grades (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY,
     student_id INTEGER NOT NULL,
     semester INTEGER NOT NULL,
     subject TEXT NOT NULL,
@@ -96,7 +96,7 @@ CREATE TABLE student_grades (
 -- MATERIALS & ELECTIVES
 -- =========================
 CREATE TABLE materials (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY,
     semester INTEGER NOT NULL,
     subject TEXT NOT NULL,
     course_code TEXT NOT NULL,
@@ -108,7 +108,7 @@ CREATE TABLE materials (
 );
 
 CREATE TABLE electives (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY,
     semester INTEGER NOT NULL,
     subject TEXT NOT NULL,
     course_code TEXT NOT NULL,
@@ -119,7 +119,7 @@ CREATE TABLE electives (
 );
 
 CREATE TABLE elective_materials (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY,
     elective_id INTEGER NOT NULL,
     material_title TEXT NOT NULL,
     file_type TEXT NOT NULL,
@@ -487,7 +487,6 @@ INSERT INTO student_timetable (student_id, day_order, subject, course_code, star
 
 (12,5,'Compiler Design','21CSC304J','02:20 PM','03:10 PM','LH614'),
 (12,5,'Data Science','21CSS303T','03:10 PM','04:00 PM','LH614'),
-(12,3,'Augmented, Virtual and Mixed Reality','21CSE353T','04:00 PM','04:50 PM','LH320'),
 (12,5,'Project','21CSP302L','04:50 PM','05:30 PM','N/A'),
 
 
